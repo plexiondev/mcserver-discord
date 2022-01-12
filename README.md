@@ -1,6 +1,12 @@
 ## mcserver-discord
 
-simple discord.py program that will look-up any java edition minecraft server using Dinnerbone's official MinecraftServer library. the info is then sent into a nicely formatted embed in the channel and message of your choosing.
+simple discord.py program that will look-up any java edition minecraft server using Dinnerbone's official mcstatus library. the info is then sent into a nicely formatted embed in the channel and message of your choosing.
+
+### REQUIRED LIBRARIES
+
+`py -m pip install discord`
+`py -m pip install mcstatus`
+`py -m pip install asyncio`
 
 ## init
 
