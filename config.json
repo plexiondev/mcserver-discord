@@ -1,9 +1,12 @@
 {
     "token": "! place your bot token here !",
-    "server_ip": "! your mc server ip + port !",
-    "server_formal_ip": "! domain to display instead of ip !",
-    "server_name": "! name of embed !",
-    "player_limit": "! player limit !",
+    "server_ip": "0.0.0.0:25565",
+    "server_formal_ip": "example.minecraft-server.com",
+    "server_name": "Minecraft Server",
+    "player_limit": "20",
+    "ignore_no_query": "true",
+    "online_message": "The server is currently online, ",
+    "offline_message": "The server is currently offline.",
 
     "channel": 0,
     "message_id": 0
