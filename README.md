@@ -15,7 +15,7 @@ you can now just run `minecraft.py` on-startup, on a 24/7 server or whatever you
 all config for the bot is held within the `config.json` file, including the bot's token which is required to run the bot for your server (obviously can't run the bot as the config for the server ip etc. is per-person)
 
 | value | description |
------------------------
+|-------|-------------|
 | token | place your bot's token here |
 | server_ip | your mc server's ip (include port eg. 127.0.0.1:25565) |
 | server_formal_ip | if you can connect to your server with a user-friendly domain, put it here (or just put the ip again) |
