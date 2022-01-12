@@ -14,6 +14,9 @@ server_ip = json["server_ip"]
 server_formal_ip = json["server_formal_ip"]
 server_name = json["server_name"]
 player_limit = json["player_limit"]
+ignore_no_query = json["ignore_no_query"]
+online_message = json["online_message"]
+offline_message = json["offline_message"]
 
 text_channel = json["channel"]
 message_id = json["message_id"]
@@ -50,14 +53,14 @@ async def on_ready():
             if status.players.online >= 1:
                 embed = discord.Embed(
                     title = server_name,
-                    description = f"The server is currently online, {status.description}",
+                    description = f"{online_message}{status.description}",
                     colour = 0x76f755
                 )
                 embed.add_field(name = "Online", value = f"{status.players.online}/50", inline = True)
             else:
                 embed = discord.Embed(
                     title = server_name,
-                    description = f"The server is currently online, {status.description}",
+                    description = f"{online_message}{status.description}",
                     colour = 0x7581ef
                 )
                 embed.add_field(name = "Online", value = f"0/{player_limit}", inline = True)
@@ -68,15 +71,15 @@ async def on_ready():
                     embed.add_field(name = "Players", value = f"{', '.join(query.players.names)}", inline = True)
                 else:
                     embed.add_field(name = "Players", value = "Nobody online", inline = True)
-            else:
-                embed.add_field(name = "Players", value = "`enable_query` is disabled in config.", inline = True)
+            elif ignore_no_query != "true":
+                embed.add_field(name = "Players", value = "`enable_query` is disabled server-side.", inline = True)
             embed.add_field(name = "Connect", value = server_formal_ip, inline = True)
             embed.set_footer(text = f"Last updated {current_time}")
             await message.edit(embed = embed)
         except:
             embed = discord.Embed(
                 title = server_name,
-                description = "The server is currently offline.",
+                description = offline_message,
                 colour = 0xed5956
             )
             embed.set_footer(text = f"Last updated {current_time}")
