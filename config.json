@@ -1,0 +1,10 @@
+{
+    "token": "! place your bot token here !",
+    "server_ip": "! your mc server ip + port !",
+    "server_formal_ip": "! domain to display instead of ip !",
+    "server_name": "! name of embed !",
+    "player_limit": "! player limit !",
+
+    "channel": 0,
+    "message_id": 0
+}
