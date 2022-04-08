@@ -19,7 +19,7 @@ except FileNotFoundError:
 
 token = json["token"]
 server_ip = json["server_ip"]
-server_formal_ip = json["server_formal_ip"]
+server_formal_ip_init = json["server_formal_ip"]
 server_name = json["server_name"]
 player_limit = json["player_limit"]
 ignore_no_query = json["ignore_no_query"]
@@ -31,6 +31,11 @@ message_id = json["message_id"]
 
 bot = commands.Bot(command_prefix="!")
 bot.remove_command("help")
+
+if server_formal_ip_init == "":
+    server_formal_ip = server_ip
+else:
+    server_formal_ip = server_formal_ip_init
 
 @bot.event
 async def on_ready():
