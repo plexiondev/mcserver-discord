@@ -5,9 +5,17 @@ from discord.ext import commands
 import datetime
 import asyncio
 import json
+# custom colours in terminal
+from colorama import init
+from colorama import Fore, Back, Style
+init()
 
-file = open("config.json","r")
-json = json.loads(file.read())
+try:
+    file = open("config.json","r")
+    json = json.loads(file.read())
+except FileNotFoundError:
+    print (f"{Back.RED}{Style.BRIGHT}[ERROR]{Style.RESET_ALL} Missing 'config.json' file, see documentation.")
+    exit()
 
 token = json["token"]
 server_ip = json["server_ip"]
@@ -26,8 +34,9 @@ bot.remove_command("help")
 
 @bot.event
 async def on_ready():
+    print (f"{Back.GREEN}{Style.BRIGHT}[READY]{Style.RESET_ALL} Signed in as {bot.user}")
+    
     global message
-    print ("\nready!\n")
     channel = bot.get_channel(text_channel)
     message = await channel.fetch_message(message_id)
     
@@ -35,7 +44,7 @@ async def on_ready():
         current_date = datetime.datetime.now()
         current_time = current_date.strftime("%H:%M:%S")
         try:
-            print (f"updated: {current_time}")
+            print (f"{Back.GREEN}{Style.BRIGHT}[SENT]{Style.RESET_ALL}  Updated at {Style.BRIGHT}{current_time}{Style.RESET_ALL}   {Fore.GREEN}({server_ip} in <#{text_channel}>){Style.RESET_ALL}")
             # lookup
             server = JavaServer.lookup(server_ip)
             
