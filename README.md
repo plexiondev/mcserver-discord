@@ -8,6 +8,7 @@ simple discord.py program that will look-up any java edition minecraft server us
 py -m pip install discord
 py -m pip install mcstatus
 py -m pip install asyncio
+py -m pip install colorama
 ```
 
 ## init
