@@ -57,6 +57,7 @@ async def on_ready():
                     colour = 0x76f755
                 )
                 embed.add_field(name = "Online", value = f"{status.players.online}/50", inline = True)
+                await bot.change_presence(activity=discord.Game(f"with {status.players.online} players"))
             else:
                 embed = discord.Embed(
                     title = server_name,
@@ -64,6 +65,7 @@ async def on_ready():
                     colour = 0x7581ef
                 )
                 embed.add_field(name = "Online", value = f"0/{player_limit}", inline = True)
+                await bot.change_presence(activity=discord.Game(f"with nobody online.."))
             # player list
             # empty lists return False
             if query_enabled == 1:
@@ -83,6 +85,7 @@ async def on_ready():
                 colour = 0xed5956
             )
             embed.set_footer(text = f"Last updated {current_time}")
+            await bot.change_presence(activity=discord.Game(f"offline!"))
             await message.edit(embed = embed)
 
         await asyncio.sleep(3)
