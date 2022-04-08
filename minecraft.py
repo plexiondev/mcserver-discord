@@ -1,5 +1,5 @@
 # import
-from mcstatus import MinecraftServer
+from mcstatus import JavaServer
 import discord
 from discord.ext import commands
 import datetime
@@ -37,7 +37,7 @@ async def on_ready():
         try:
             print (f"updated: {current_time}")
             # lookup
-            server = MinecraftServer.lookup(server_ip)
+            server = JavaServer.lookup(server_ip)
             
             # get current status
             status = server.status()
