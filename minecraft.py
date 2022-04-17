@@ -2,6 +2,7 @@
 from mcstatus import JavaServer
 import discord
 from discord.ext import commands
+from discord.ext import tasks
 import datetime
 import asyncio
 import json
@@ -37,6 +38,66 @@ if server_formal_ip_init == "":
 else:
     server_formal_ip = server_formal_ip_init
 
+# loop
+@tasks.loop(seconds=4)
+async def update():
+    # work
+    current_date = datetime.datetime.now()
+    current_time = current_date.strftime("%H:%M:%S")
+    try:
+        print (f"{Back.GREEN}{Style.BRIGHT}[SENT]{Style.RESET_ALL}  Updated at {Style.BRIGHT}{current_time}{Style.RESET_ALL}   {Fore.GREEN}({server_ip} in <#{text_channel}>){Style.RESET_ALL}")
+        # lookup
+        server = JavaServer.lookup(server_ip)
+        
+        # get current status
+        status = server.status()
+        # players
+        query_enabled = 0
+        try:
+            query = server.query()
+            query_enabled = 1
+        except:
+            query_enabled = 0
+        
+        # player count
+        if status.players.online >= 1:
+            embed = discord.Embed(
+                title = server_name,
+                description = f"{online_message}{status.description}",
+                colour = 0x76f755
+            )
+            embed.add_field(name = "Online", value = f"{status.players.online}/50", inline = True)
+            await bot.change_presence(activity=discord.Game(f"with {status.players.online} players"))
+        else:
+            embed = discord.Embed(
+                title = server_name,
+                description = f"{online_message}{status.description}",
+                colour = 0x7581ef
+            )
+            embed.add_field(name = "Online", value = f"0/{player_limit}", inline = True)
+            await bot.change_presence(activity=discord.Game(f"with nobody online.."))
+        # player list
+        # empty lists return False
+        if query_enabled == 1:
+            if query.players.names:
+                embed.add_field(name = "Players", value = f"{', '.join(query.players.names)}", inline = True)
+            else:
+                embed.add_field(name = "Players", value = "Nobody online", inline = True)
+        elif ignore_no_query != "true":
+            embed.add_field(name = "Players", value = "`enable_query` is disabled server-side.", inline = True)
+        embed.add_field(name = "Connect", value = server_formal_ip, inline = True)
+        embed.set_footer(text = f"Last updated {current_time}")
+        await message.edit(embed = embed)
+    except:
+        embed = discord.Embed(
+            title = server_name,
+            description = offline_message,
+            colour = 0xed5956
+        )
+        embed.set_footer(text = f"Last updated {current_time}")
+        await bot.change_presence(activity=discord.Game(f"offline!"))
+        await message.edit(embed = embed)
+
 @bot.event
 async def on_ready():
     print (f"{Back.GREEN}{Style.BRIGHT}[READY]{Style.RESET_ALL} Signed in as {bot.user}")
@@ -45,63 +106,6 @@ async def on_ready():
     channel = bot.get_channel(text_channel)
     message = await channel.fetch_message(message_id)
     
-    while True:
-        current_date = datetime.datetime.now()
-        current_time = current_date.strftime("%H:%M:%S")
-        try:
-            print (f"{Back.GREEN}{Style.BRIGHT}[SENT]{Style.RESET_ALL}  Updated at {Style.BRIGHT}{current_time}{Style.RESET_ALL}   {Fore.GREEN}({server_ip} in <#{text_channel}>){Style.RESET_ALL}")
-            # lookup
-            server = JavaServer.lookup(server_ip)
-            
-            # get current status
-            status = server.status()
-            # players
-            query_enabled = 0
-            try:
-                query = server.query()
-                query_enabled = 1
-            except:
-                query_enabled = 0
-            
-            # player count
-            if status.players.online >= 1:
-                embed = discord.Embed(
-                    title = server_name,
-                    description = f"{online_message}{status.description}",
-                    colour = 0x76f755
-                )
-                embed.add_field(name = "Online", value = f"{status.players.online}/50", inline = True)
-                await bot.change_presence(activity=discord.Game(f"with {status.players.online} players"))
-            else:
-                embed = discord.Embed(
-                    title = server_name,
-                    description = f"{online_message}{status.description}",
-                    colour = 0x7581ef
-                )
-                embed.add_field(name = "Online", value = f"0/{player_limit}", inline = True)
-                await bot.change_presence(activity=discord.Game(f"with nobody online.."))
-            # player list
-            # empty lists return False
-            if query_enabled == 1:
-                if query.players.names:
-                    embed.add_field(name = "Players", value = f"{', '.join(query.players.names)}", inline = True)
-                else:
-                    embed.add_field(name = "Players", value = "Nobody online", inline = True)
-            elif ignore_no_query != "true":
-                embed.add_field(name = "Players", value = "`enable_query` is disabled server-side.", inline = True)
-            embed.add_field(name = "Connect", value = server_formal_ip, inline = True)
-            embed.set_footer(text = f"Last updated {current_time}")
-            await message.edit(embed = embed)
-        except:
-            embed = discord.Embed(
-                title = server_name,
-                description = offline_message,
-                colour = 0xed5956
-            )
-            embed.set_footer(text = f"Last updated {current_time}")
-            await bot.change_presence(activity=discord.Game(f"offline!"))
-            await message.edit(embed = embed)
-
-        await asyncio.sleep(3)
+    update.start()
 
 bot.run(token)
